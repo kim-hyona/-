@@ -1,68 +1,109 @@
-# 수정중
--------
+# 🧪 Breast Cancer Survival Prediction
+"Predicting survival outcomes for breast cancer patients using machine learning."
+This project aims to develop a predictive model for survival outcomes based on data from female breast cancer patients. Breast cancer is one of the most common cancers among women globally, and early diagnosis and timely treatment significantly influence survival rates. Since survival can vary based on personal characteristics such as cancer stage, age, and marital status, predictive modeling can help provide tailored treatment plans and better outcomes.
+
+# 📊 Dataset Description
+We used the Breast Cancer dataset from Kaggle, sourced from the SEER program by the NCI (updated November 2017). It includes female patients diagnosed with invasive ductal and lobular breast cancers between 2006–2010. Patients with missing tumor size data, unknown lymph node info, or survival months less than 1 were excluded, resulting in a final dataset of 4,024 patients.
+
+# 🩹 Data Preprocessing & EDA
+* Target variable Status was label-encoded (0 = deceased, 1 = survived).
+* Dataset was split into training and testing sets (80:20).
+* Categorical variables were one-hot encoded using pd.get_dummies.
+* SMOTE was applied to training data to address class imbalance.
 
 
-본 연구의 목적은 유방암 판정을 받은 여성 환자의 데이터를 기반으로 생존 여부를 예측하는 모델을 개발하는 것입니다. 유방암은 전 세계적으로 여성에게 가장 흔하게 발생하는 암 중 하나로, 조기 진단과 신속한 치료가 생존에 중요한 영향을 미칩니다. 특히 유방암의 생존률은 암의 진행 상태, 환자의 연령, 결혼 상태와 같은 개인적 특성에 따라 크게 달라질 수 있어, 생존 예측 모델의 필요성이 큽니다. 이를 통해 새로 유방암 판정을 받은 환자에게 생존 가능성을 예측하고, 맞춤형 치료 계획을 제공함으로써 치료 효과를 극대화할 수 있습니다.
+# 📈 Visual Explorations
 
+## 1. Survival by Age Distribution
+Younger patients (ages 50–60) had higher survival density, while deceased patients were mostly aged 60–70.
 
-#데이터 셋 소개
-------
-
-
-Kaggle의 BreastCancer 데이터를 활용하였습니다. 인구 기반 암 통계에 대한 정보를 제공하는 NCI의 SEER 프로그램의 2017년 11월 업데이트에서 얻었으며, 2006-2010년에 진단된 침윤성 관상 및 소엽 암 유방암이 있는 여성 환자가 포함되었습니다. 종양 크기를 알 수 없는 환자, 검사된 지역 LN, 양성 지역 LN, 생존 개월이 1개월 미만인 환자는 제외되었습니다. 따라서 최종적으로 4024명의 환자가 포함되었습니다.
-
-
-
-#데이터 전처리, 탐색 및 시각화(EDA)
--------
-
-
-환자의 관측 예측 모델을 개발하기 위해 다음과 같은 데이터 전처리 과정을 수행했습니다.
-먼저 CSV 파일에서 원본 데이터를 불러온 후, 목표 변수인 Status(생존 여부)를 LabelEncoder를 사용해 0과 1로 변환하여 모델이 이해할 수 있는 형식으로 바꿨습니다. 이후 데이터를 학습용과 테스트용으로 분리하고, pd.get_dummies를 사용해 범주형 변수를 더미 변수로 변환했습니다. 이 과정에서 다중공선성을 방지하기 위해 첫 번째 범주를 기준으로 잡았습니다..
-모델이 과적합되지 않도록 데이터를 8:2 비율로 나누어 학습 데이터와 테스트 데이터를 구성하였습니다. 또한, 소수 클래스 문제를 해결하기 위해 학습 데이터에만 SMOTE(Synthetic Minority Over-sampling Technique)를 적용하여 소수 클래스의 샘플을 증강하였습니다.
-
-
-
------------------------------
-
-(사진 들어갈거임)
-이 그래프는 나이 분포에 따른 생존 여부를 커널 밀도 함수로 시각화한 것입니다. x축은 나이, y축은 해당 나이대의 상대적 생존밀도를 나태냅니다. 파란색과 회색은 생존 상태별로 나뉘며, 생존 환자의 그래프에서는 50-60세 구간에서 밀도가 가장 높아, 이 연령대의 환자들이 상대적으로 높은 생존률을 보이는 경향을 확인할 수 있습니다. 반면, 사망 환자의 그래프는 60-70세 구간에서 밀도가 높아, 이 연령대 환자들이 상대적으로 높은 사망률을 보입니다.
+<img width="862" height="397" alt="Image" src="https://github.com/user-attachments/assets/41564b92-3ed4-4888-8040-e1baecde1d56" />
 
 
 ---------------------------
+## 2. Survival by Marital Status
+Married patients formed the majority. However, more deceased patients were married, possibly due to diagnosis bias or support availability.
 
-(그래프)
-위 그래프는 환자의 생존 상태와 결혼 상태(Marital Status) 간의 관계를 나타낸 막대 그래프로, 생존 여부와 결혼 상태 사이의 연관성을 시각적으로 분석할 수 있습니다. X축은 결혼 상태를 나타내며, '기혼(Married)', '이혼(Divorced)', '미혼(Single)', '사별(Widowed)', '별거(Separated)' 등으로 구분됩니다. Y축은 각 결혼 상태별 환자의 수를 나타내며, Status(생존 상태)는 '0'은 사망을, '1'은 생존을 의미합니다. 그래프는 서로 다른 색상으로 구분하여, 상태에 따른 분포를 한눈에 볼 수 있게 구성하였습니다.
-그래프를 보면 기혼 환자의 비율이 압도적으로 높다는 점이 눈에 띄며, 특히 기혼 상태에서 사망한 환자(파란색)가 생존한 환자(주황색)보다 상당히 많아, 많은 환자가 기혼 상태에서 진단되었으며 그중 사망한 경우가 다수임을 알 수 있습니다. 한편, 미혼과 이혼 상태의 환자에서도 유사한 패턴이 보이지만 기혼 상태와 비교하면 절대적인 수는 적습니다. 이 두 상태의 경우, 생존한 환자와 사망한 환자의 수가 비슷한 수준을 유지하고 있습니다.
+<img width="935" height="462" alt="Image" src="https://github.com/user-attachments/assets/ce5d12b8-fb24-4a5f-a2f8-a77f35d5b101" />
+
+
 
 
 ---------------------------
-(그래프)
-위 그래프는 환자의 생존 여부(Survival Status)에 따른 종양 크기(Tumor Size)의 분포를 보여주는 바이올린 플롯입니다. 이 플롯은 종양 크기가 생존에 미치는 영향을 시각적으로 분석하는 데 유용하다고 생각하여 사용하였습니다. 그래프에서 X축은 생존 상태를 나타내며, '0'은 생존하지 못한 경우, '1'은 생존한 경우를 의미합니다. Y축은 종양 크기를 나타내며, 단위는 특정되어 있지 않지만 상대적 크기를 비교하는 데 중점을 두고 있습니다. 각 상태별로 색상이 다른 바이올린 플롯이 표시되어, 생존 여부에 따른 종양 크기 분포의 차이를 한눈에 파악할 수 있습니다.
-생존하지 못한 그룹(0)과 생존한 그룹(1) 모두에서 종양 크기는 중앙 값 부근에 밀집해 있습니다. 특히, 두 그룹 모두 중앙값이 20~30사이에 위치하고 있어, 생존 여부에 따른 종양 크기의 분포가 비슷하다는 것을 알 수 있습니다. 이는 종양 크기가 생존 여부를 결정짓는 주요 변수가 아닐 수도 있음을 알 수 있습니다. 그러나 생존 그룹(1)에서 극소수의 데이터가 상대적으로 큰 종양 크기를 나타내는 것도 확인할 수 있습니다. 이는 종양 크기가 커도 일부 환자는 생존할 수 있다는 것으로도 해석할 수 있습니다.
+## 3. Tumor Size by Survival Status
+Both survived and deceased groups show similar tumor size distributions, indicating size may not be a decisive survival factor.
+
+<img width="940" height="470" alt="Image" src="https://github.com/user-attachments/assets/0dee096c-625f-475e-8c3a-932a4eb50961" />
 
 
 -----------------------
-(그래프ㅖ)
-이 그래프는 유방암 판정을 받은 환자들의 생존 개월 수를 생존 여부에 따라 스트립 플롯으로 나타낸 것입니다. 생존한 환자들은 대부분 장기 생존자로, 생존 개월 수가 비교적 길며, 중간값 이상에서 분포하는 경향을 보입니다. 이는 효과적인 치료와 관리가 이루어졌을 가능성을 볼 수 있습니다. 반면, 사망한 환자들의 경우 생존 개월 수가 주로 초기(1~2개월)에 집중되어 있으며, 이는 진단 이후 빠르게 사망한 환자가 많다는 점을 나타내고 있습니다. 저희는 이러한 패턴을 진단 시점에서 환자의 암 상태가 이미 심각했거나, 암의 진행 속도가 빠른 환자가 많았음을 보여주며, 조기 진단 및 신속한 치료 개입의 필요성을 강조했음으로 해석하였습니다. 암 환자의 초기 생존 개월 수가 짧은 것은 조기 발견의 중요성을  보여주며, 지속적인 모니터링과 초기 대응의 필요성을 확인시켜 줄 수 있습니다.
+## 4. Survival Months by Status
+Survivors lived significantly longer. Many deceased patients passed within the first 1–2 months, highlighting the importance of early detection.
+
+<img width="931" height="433" alt="Image" src="https://github.com/user-attachments/assets/c23b63f1-d10c-402b-9425-d39b7f1213f0" />
+
 
 -----------------------
 
-#모델학습
+# 🤖 Model Training (SVM)
 
----------------
-(결과픽처)
-모델은 SVM모델을 사용하였습니다. 그 이유는 불균형한 데이터셋에서의 분류 성능을 개선하기 위해 사용하게 되었는데, SVM은 클래스 간 margin을 최대로 하는 초평면을 찾는 알고리즘으로, 소수 클래스 데이터에 대한 예측 성능이 중요한 상황에서 적합한 모델로 평가될 수 있습니다.
-데이터가 불균형하기 때문에 소수 클래스의 데이터를 증강하기 위해 SMOTE(Synthetic Minority Over-sampling Technique) 기법을 적용했습니다. SMOTE는 소수 클래스의 데이터를 합성하여 클래스 간 균형을 맞추는 역할을 합니다. 이를 통해 모델이 충분히 학습할 수 있도록 도와줍니다.
-또한 최적의 SVM 모델을 얻기 위해 RandomizedSearchCV를 활용하여 하이퍼파라미터를 탐색했습니다. RandomizedSearchCV는 무작위로 지정된 하이퍼파라미터 조합을 시도하기 때문에 파라미터 탐색 시간과 효율성을 모두 탐색할 수 있었습니다. SVM의 주요 하이퍼파라미터인 C, gamma, kernel을 탐색하여 최적 조합을 찾았으며, 이를 통해 모델의 일반화 성능을 높이고자 했습니다.
-모델 평가 결과, 전체 정확도는 약 87%로 나타났습니다. 주요 성능 지표를 살펴보면 클래스 0에 대한 precision(정밀도)과 recall(재현율)은 각각 0.93과 0.92로 매우 높은 성능을 보였습니다. 반면 클래스 1의 precision은 0.57, recall은 0.60으로 상대적으로 낮은 점수를 보였습니다. 이는 소수 클래스에 대한 예측 성능이 다소 부족하다는 것으로 볼 수 있습니다. 특히 클래스 1의 f1-score가 0.59로, 불균형 데이터의 특성상 소수 클래스에서 성능 저하가 발생한 것으로 보입니다.
-이를 통해 모델이 대다수 클래스에 대해 높은 예측 정확도를 보이는 반면, 소수 클래스에 대해서는 성능이 떨어지는 것을 확인할 수 있었습니다. 이 결과는 불균형 데이터셋이 가진 일반적인 문제로, 추가적인 개선이 필요하다고 느꼈으며, 우선 결과를 토대로 SHAP 시각화를 통해 모델이 각 피처에 대해 예측에 미치는 영향을 분석하여, 모델이 특정 피처에 얼마나 의존하는지 시각적으로 확인하였습니다.
+Model: Support Vector Machine (SVM)
+
+Why SVM? Effective in handling imbalanced data and finding the optimal decision boundary (maximum margin hyperplane).
+
+SMOTE: Used to synthetically balance minority class samples.
+
+Hyperparameter Tuning: Performed using RandomizedSearchCV to explore combinations of C, gamma, and kernel efficiently.
+
+📋 Evaluation
+
+Overall Accuracy: ~87%
+
+Class 0 (Deceased): Precision = 0.93, Recall = 0.92
+
+Class 1 (Survived): Precision = 0.57, Recall = 0.60, F1 = 0.59
+
+The model performs well on the majority class but underperforms on the minority class. This reflects the typical challenge of imbalanced datasets. To address this, we used SHAP for interpretability.
+
+<img width="937" height="477" alt="Image" src="https://github.com/user-attachments/assets/7becb68b-4c1b-43eb-afc8-540dfe3a3130" />
+<img width="939" height="447" alt="Image" src="https://github.com/user-attachments/assets/84bbd8fa-f2bd-438b-8958-e05bf4cffd50" />
 
 
-#XAI(SHAP)를 활용한 성능평가
+# 🔍 Model Interpretation using SHAP
 
-------------
 
-(샵시각화)
 
-SHAP 요약 그래프는 모델의 각 특징이 예측에 어떻게 영향을 미치는지 시각화하여 보여줍니다. 이 그래프의 구성요소를 먼저 소개하겠습니다. Y축에는 모델 학습에 사용되는 주요 특징들이 존재합니다. 상단에 있을수록 모델에 대한 영향이 더 큰 특징일 가능성이 크다고 해석 하였으며, X축은 SHAP값으로, 모델 예측에 대한 각 특징의 기여도를 나타냅니다. 양의 SHAP값은 해당 특징이 모델의 예측을 양성 방향으로, 음의 SHAP값은 음성 방향으로 영향은 준다는 의미입니다. 색상의 경우 특징의 값의 크기를 나타내는데, 붉은색에 가까울수록 특징의 값이 높고, 푸른색에 가까울수록 값이 낮습니다. 다음으로 주요 특징을 해석하겠습니다. Survival Months(생존 개월 수)는 예측에 가장 큰 영향을 미치는 특징입니다. 생존 개월 수가 높을수록 (붉은색 점들) 모델은 생존 가능성이 높다고 예측할 수 있습니다. 그리고 Grade_2(종양 등급 2)는 생존 여부와 관련된 중요한 변수입니다. 높은 Grade_2 값은 생존 가능성을 낮추는 방향으로 영향을 미치는 것으로 보입니다. Marital Status_Married(결혼 상태: 기혼)결혼 상태가 기혼일 때 생존 가능성을 증가시키는 경향이 있습니다. 기혼(붉은색)의 경우 생존 가능성이 높다고 모델이 예측할 수 있으며, 그 외에 Regional Node Positive (림프절 양성 여부)도 생존 여부에 큰 영향을 끼치며 AGE(나이)경우 나이가 낮을 수록 (푸른색)생존 가능성이 높고, 나이가 많을 수록(붉은색)생존 가능성이 낮게 예측하는 결과를 보여줍니다. 마지막으로 Tumor Size(종양 크기)도 예측에 중요한 영향을 미칩니다. 종양 크기가 클수록 생존 가능성을 낮추는 방향으로 영향을 미칩니다. 결론적으로 이 SHAP 시각화는 생존 개월 수, 종양 등급, 결혼 상태, 나이, 종양 크기 등의 특징이 모델의 예측에 가장 큰 영향을 미치는 요소로 보이고 있습니다. 생존 가능성을 높이는 방향의 특징은 낮은 등급의 종양, 낮은 나이, 결혼 상태 등이 있으며, 반대로 높은 종양 등급, 림프절 양성, 나이가 많을수록 생존 가능성을 낮추는 방향으로 예측에 영향을 미칩니다.
+SHAP (SHapley Additive exPlanations) was used to analyze the feature importance:
+
+Survival Months: Most impactful. Longer survival months → higher survival probability.
+
+Grade_2: Negatively impacts survival. Higher tumor grade correlates with lower survival.
+
+Marital Status (Married): Associated with better survival odds.
+
+Regional Node Positive: Higher lymph node involvement → worse survival.
+
+AGE: Younger age increases survival odds.
+
+Tumor Size: Larger size slightly decreases survival probability.
+
+<img width="929" height="474" alt="Image" src="https://github.com/user-attachments/assets/b4e6ebe4-33d9-44b7-b0bf-5b98d1382f61" /> 
+
+
+🧐 Summary:
+
+SHAP analysis confirms that key survival indicators include:
+
+Long survival duration
+
+Low tumor grade
+
+Being married
+
+Low lymph node involvement
+
+Younger age
+
+Smaller tumor size
+
+These insights could support doctors in identifying high-risk patients and prioritizing treatment plans.
